@@ -1,6 +1,13 @@
 "use client";
 
-import { useUserSIPs, useCancelSIP, usePauseSIP, useResumeSIP } from "@/lib/hyperliquid/hooks-sip";
+import {
+  useUserSIPs,
+  useCancelSIP,
+  usePauseSIP,
+  useResumeSIP,
+} from "@/lib/hyperliquid/hooks-sip";
+import { useGetBalances } from "@/lib/hyperliquid/hooks";
+import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -25,10 +32,18 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export function SIPList() {
+  const { address } = useAccount();
   const { data: sips, isLoading } = useUserSIPs();
+  const { data: balancesData } = useGetBalances(address!);
   const { mutate: cancelSIP, isPending: isCancelling } = useCancelSIP();
   const { mutate: pauseSIP, isPending: isPausing } = usePauseSIP();
   const { mutate: resumeSIP, isPending: isResuming } = useResumeSIP();
+
+  const investedMap = new Map<string, number>();
+  balancesData?.balances?.forEach((b: any) => {
+    const ntl = parseFloat(b.entryNtl);
+    if (ntl > 0) investedMap.set(b.coin, ntl);
+  });
 
   if (isLoading) {
     return (
@@ -55,6 +70,7 @@ export function SIPList() {
           <TableRow>
             <TableHead className="py-2 h-auto">Asset</TableHead>
             <TableHead className="py-2 h-auto">Monthly Amount</TableHead>
+            <TableHead className="py-2 h-auto">Invested</TableHead>
             <TableHead className="py-2 h-auto">Status</TableHead>
             <TableHead className="py-2 h-auto">Created</TableHead>
             <TableHead className="text-right py-2 h-auto">Actions</TableHead>
@@ -73,7 +89,14 @@ export function SIPList() {
                   {sip.asset_name}
                 </a>
               </TableCell>
-              <TableCell className="py-2">{sip.monthly_amount_usdc} USDC</TableCell>
+              <TableCell className="py-2">
+                {sip.monthly_amount_usdc} USDC
+              </TableCell>
+              <TableCell className="py-2 font-mono">
+                {investedMap.has(sip.asset_name)
+                  ? `$${investedMap.get(sip.asset_name)!.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                  : "—"}
+              </TableCell>
               <TableCell className="py-2">
                 {sip.status === "active" ? (
                   <Badge variant="default">Active</Badge>
@@ -118,8 +141,8 @@ export function SIPList() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Cancel SIP?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to cancel this SIP for {sip.asset_name}?
-                              This action cannot be undone.
+                              Are you sure you want to cancel this SIP for{" "}
+                              {sip.asset_name}? This action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -167,8 +190,8 @@ export function SIPList() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Cancel SIP?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to cancel this SIP for {sip.asset_name}?
-                              This action cannot be undone.
+                              Are you sure you want to cancel this SIP for{" "}
+                              {sip.asset_name}? This action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
