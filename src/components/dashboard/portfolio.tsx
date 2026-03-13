@@ -29,14 +29,30 @@ function getSpotPrice(
   if (!spotMeta || !allMids) return null;
 
   const tokenInfo = spotMeta.tokens.find((t: any) => t.name === coin);
-  if (!tokenInfo) return null;
+  if (!tokenInfo) {
+    console.log(`[getSpotPrice] ${coin}: tokenInfo not found`);
+    return null;
+  }
 
+  // USDC = token 0, USDH = token 360 (treat as equivalent)
+  const STABLE_QUOTE_TOKENS = [0, 360];
   const spotPair = spotMeta.universe.find(
-    (u: any) => u.tokens[0] === tokenInfo.index && u.tokens[1] === 0,
+    (u: any) =>
+      u.tokens[0] === tokenInfo.index &&
+      STABLE_QUOTE_TOKENS.includes(u.tokens[1]),
   );
-  if (!spotPair) return null;
+  if (!spotPair) {
+    console.log(
+      `[getSpotPrice] ${coin}: no spotPair for tokenIndex=${tokenInfo.index}`,
+    );
+    return null;
+  }
 
   const price = parseFloat(allMids[`@${spotPair.index}`] || "0");
+  if (price <= 0)
+    console.log(
+      `[getSpotPrice] ${coin}: price=0 for @${spotPair.index}, raw=${allMids[`@${spotPair.index}`]}`,
+    );
   return price > 0 ? price : null;
 }
 
@@ -181,6 +197,9 @@ export function Portfolio({ address }: PortfolioProps) {
     [balanceData, sips, spotMeta, allMids],
   );
 
+  const usdcItem = items.find((i) => i.isUsdc);
+  const assetItems = items.filter((i) => !i.isUsdc);
+
   const totalValue = useMemo(
     () => items.reduce((sum, item) => sum + (item.currentValue ?? 0), 0),
     [items],
@@ -200,7 +219,15 @@ export function Portfolio({ address }: PortfolioProps) {
             </p>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          {usdcItem && usdcItem.balance !== null && (
+            <span className="font-mono text-sm text-muted-foreground">
+              {`$${usdcItem.balance.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })} USDC`}
+            </span>
+          )}
           <UnifiedDepositModal />
           <CreateSipModal />
         </div>
@@ -208,7 +235,7 @@ export function Portfolio({ address }: PortfolioProps) {
 
       {isLoading ? (
         <PortfolioSkeleton />
-      ) : items.length === 0 ? (
+      ) : assetItems.length === 0 ? (
         <div className="rounded-lg border border-dashed py-8">
           <p className="text-center text-muted-foreground text-sm">
             No balances or SIPs yet. Deposit funds or create a SIP to get
@@ -217,7 +244,7 @@ export function Portfolio({ address }: PortfolioProps) {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map((item) => (
+          {assetItems.map((item) => (
             <PortfolioCard
               key={item.coin}
               item={item}
