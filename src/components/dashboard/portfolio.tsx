@@ -18,6 +18,7 @@ import { UnifiedDepositModal } from "./unified-deposit-modal";
 import { CreateSipModal } from "@/components/sip/create-sip-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
+import { Wallet } from "lucide-react";
 import { PortfolioCard, PortfolioItem } from "./portfolio-card";
 
 function getSpotPrice(
@@ -220,15 +221,22 @@ export function Portfolio({ address }: PortfolioProps) {
           )}
         </div>
         <div className="flex items-center gap-3">
-          {usdcItem && usdcItem.balance !== null && (
-            <span className="font-mono text-sm text-muted-foreground">
-              {`$${usdcItem.balance.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })} USDC`}
-            </span>
-          )}
-          <UnifiedDepositModal />
+          <UnifiedDepositModal
+            trigger={
+              <button className="inline-flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm hover:bg-accent transition-colors">
+                <Wallet className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">USDC</span>
+                <span className="font-mono">
+                  {usdcItem?.balance !== null && usdcItem?.balance !== undefined
+                    ? `$${usdcItem.balance.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}`
+                    : "--"}
+                </span>
+              </button>
+            }
+          />
           <CreateSipModal />
         </div>
       </div>

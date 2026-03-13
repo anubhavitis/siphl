@@ -17,7 +17,11 @@ import { Loader2, RefreshCw, Wallet } from "lucide-react";
 import { MIN_DEPOSIT } from "@/lib/constants/hyperliquid";
 import { toast } from "sonner";
 
-export function UnifiedDepositModal() {
+interface UnifiedDepositModalProps {
+  trigger?: React.ReactNode;
+}
+
+export function UnifiedDepositModal({ trigger }: UnifiedDepositModalProps) {
   const [open, setOpen] = useState(false);
   const [transferAmount, setTransferAmount] = useState<number>(0);
   const [depositAmount, setDepositAmount] = useState<number>(MIN_DEPOSIT);
@@ -94,10 +98,12 @@ export function UnifiedDepositModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="inline-flex items-center gap-2">
-          <Wallet className="w-4 h-4" />
-          Manage Balance
-        </Button>
+        {trigger ?? (
+          <Button className="inline-flex items-center gap-2">
+            <Wallet className="w-4 h-4" />
+            Manage Balance
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -125,14 +131,17 @@ export function UnifiedDepositModal() {
                   type="number"
                   min="0"
                   step="0.01"
-                  placeholder={hasPerpBalance ? "Enter amount" : "No Perp balance"}
+                  placeholder={
+                    hasPerpBalance ? "Enter amount" : "No Perp balance"
+                  }
                   value={transferAmount || ""}
                   onChange={(e) => setTransferAmount(Number(e.target.value))}
                   disabled={!hasPerpBalance}
                 />
                 <div className="flex justify-between items-center">
                   <p className="text-xs text-muted-foreground">
-                    Available: <span className="font-semibold">{perpBalance} USDC</span>
+                    Available:{" "}
+                    <span className="font-semibold">{perpBalance} USDC</span>
                   </p>
                   <Button
                     type="button"
