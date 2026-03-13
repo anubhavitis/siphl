@@ -57,26 +57,6 @@ const createColumns = (
     },
   },
   {
-    id: "invested",
-    header: "Invested",
-    cell: ({ row }) => {
-      const { coin, entryNtl } = row.original;
-      const ntl = parseFloat(entryNtl);
-      if (coin === "USDC" || ntl <= 0) {
-        return <div className="text-muted-foreground">—</div>;
-      }
-      return (
-        <div className="font-mono">
-          $
-          {ntl.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: "total",
     header: "Balance",
     cell: ({ row }) => {
@@ -165,6 +145,26 @@ const createColumns = (
           {currentPrice.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 6,
+          })}
+        </div>
+      );
+    },
+  },
+  {
+    id: "invested",
+    header: "Invested",
+    cell: ({ row }) => {
+      const { coin, entryNtl } = row.original;
+      const ntl = parseFloat(entryNtl);
+      if (coin === "USDC" || ntl <= 0) {
+        return <div className="text-muted-foreground">—</div>;
+      }
+      return (
+        <div className="font-mono">
+          $
+          {ntl.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
           })}
         </div>
       );
@@ -343,10 +343,10 @@ export function SpotBalancesTable({ address }: SpotBalancesTableProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Asset</TableHead>
-                <TableHead>Invested</TableHead>
                 <TableHead>Balance</TableHead>
                 <TableHead>Avg Buy Price</TableHead>
                 <TableHead>Current Price</TableHead>
+                <TableHead>Invested</TableHead>
                 <TableHead>Value</TableHead>
                 <TableHead>P&L %</TableHead>
               </TableRow>
