@@ -31,7 +31,7 @@ interface SpotBalanceWithPnl extends SpotBalance {
 
 const createColumns = (
   allMids: any,
-  spotMeta: any
+  spotMeta: any,
 ): ColumnDef<SpotBalanceWithPnl>[] => [
   {
     accessorKey: "coin",
@@ -53,6 +53,26 @@ const createColumns = (
         >
           {coin}
         </a>
+      );
+    },
+  },
+  {
+    id: "invested",
+    header: "Invested",
+    cell: ({ row }) => {
+      const { coin, entryNtl } = row.original;
+      const ntl = parseFloat(entryNtl);
+      if (coin === "USDC" || ntl <= 0) {
+        return <div className="text-muted-foreground">—</div>;
+      }
+      return (
+        <div className="font-mono">
+          $
+          {ntl.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </div>
       );
     },
   },
@@ -126,7 +146,7 @@ const createColumns = (
 
       // Find the spot pair (token paired with USDC)
       const spotPair = spotMeta.universe.find(
-        (u: any) => u.tokens[0] === tokenInfo.index && u.tokens[1] === 0
+        (u: any) => u.tokens[0] === tokenInfo.index && u.tokens[1] === 0,
       );
 
       if (!spotPair || !allMids) {
@@ -183,7 +203,7 @@ const createColumns = (
 
       // Find the spot pair (token paired with USDC)
       const spotPair = spotMeta.universe.find(
-        (u: any) => u.tokens[0] === tokenInfo.index && u.tokens[1] === 0
+        (u: any) => u.tokens[0] === tokenInfo.index && u.tokens[1] === 0,
       );
 
       if (!spotPair || !allMids) {
@@ -206,8 +226,8 @@ const createColumns = (
           currentValue > entryNtlNum
             ? "text-green-600 dark:text-green-400"
             : currentValue < entryNtlNum
-            ? "text-red-600 dark:text-red-400"
-            : "";
+              ? "text-red-600 dark:text-red-400"
+              : "";
       }
 
       return (
@@ -246,7 +266,7 @@ const createColumns = (
 
       // Find the spot pair (token paired with USDC)
       const spotPair = spotMeta.universe.find(
-        (u: any) => u.tokens[0] === tokenInfo.index && u.tokens[1] === 0
+        (u: any) => u.tokens[0] === tokenInfo.index && u.tokens[1] === 0,
       );
 
       if (!spotPair || !allMids) {
@@ -268,8 +288,8 @@ const createColumns = (
         pnlPercent > 0
           ? "text-green-600 dark:text-green-400"
           : pnlPercent < 0
-          ? "text-red-600 dark:text-red-400"
-          : "text-muted-foreground";
+            ? "text-red-600 dark:text-red-400"
+            : "text-muted-foreground";
 
       const prefix = pnlPercent > 0 ? "+" : "";
 
@@ -290,9 +310,8 @@ export function SpotBalancesTable({ address }: SpotBalancesTableProps) {
 
   const columns = createColumns(allMids, spotMeta);
 
-  const nonZeroBalances = data?.balances?.filter(
-    (balance) => parseFloat(balance.total) > 0
-  ) ?? [];
+  const nonZeroBalances =
+    data?.balances?.filter((balance) => parseFloat(balance.total) > 0) ?? [];
 
   const totalValue = nonZeroBalances.reduce((sum, balance) => {
     const { coin, total } = balance;
@@ -308,7 +327,7 @@ export function SpotBalancesTable({ address }: SpotBalancesTableProps) {
     if (!tokenInfo) return sum;
 
     const spotPair = spotMeta.universe.find(
-      (u: any) => u.tokens[0] === tokenInfo.index && u.tokens[1] === 0
+      (u: any) => u.tokens[0] === tokenInfo.index && u.tokens[1] === 0,
     );
     if (!spotPair) return sum;
 
@@ -324,6 +343,7 @@ export function SpotBalancesTable({ address }: SpotBalancesTableProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Asset</TableHead>
+                <TableHead>Invested</TableHead>
                 <TableHead>Balance</TableHead>
                 <TableHead>Avg Buy Price</TableHead>
                 <TableHead>Current Price</TableHead>
@@ -334,12 +354,27 @@ export function SpotBalancesTable({ address }: SpotBalancesTableProps) {
             <TableBody>
               {[...Array(3)].map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-12" />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
