@@ -161,7 +161,7 @@ export function PortfolioCard({
               {pnlPercent !== null && <PnlBadge pnl={pnlPercent} />}
             </div>
             <span className="text-sm font-mono text-muted-foreground whitespace-nowrap ml-auto mr-2">
-              avg {avgBuyPrice !== null ? formatUsd(avgBuyPrice, 6) : "--"}
+              avg {avgBuyPrice !== null ? formatUsd(avgBuyPrice) : "--"}
             </span>
           </AccordionTrigger>
 
@@ -174,9 +174,7 @@ export function PortfolioCard({
               <div className="grid grid-cols-2 gap-2">
                 <DetailRow
                   label="Price"
-                  value={
-                    currentPrice !== null ? formatUsd(currentPrice, 6) : "--"
-                  }
+                  value={currentPrice !== null ? formatUsd(currentPrice) : "--"}
                 />
                 <DetailRow
                   label="Balance"
@@ -199,9 +197,7 @@ export function PortfolioCard({
                 />
                 <DetailRow
                   label="Avg Buy"
-                  value={
-                    avgBuyPrice !== null ? formatUsd(avgBuyPrice, 6) : "--"
-                  }
+                  value={avgBuyPrice !== null ? formatUsd(avgBuyPrice) : "--"}
                 />
               </div>
 

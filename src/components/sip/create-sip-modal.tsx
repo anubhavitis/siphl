@@ -181,7 +181,8 @@ export function CreateSipModal() {
             <span>
               <DialogTrigger asChild>
                 <Button
-                  className="inline-flex items-center gap-2"
+                  variant="outline"
+                  className="inline-flex items-center gap-2 px-3 py-2 h-auto text-sm"
                   disabled={!canCreateSIP}
                 >
                   <Plus className="w-4 h-4" />
