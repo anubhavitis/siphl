@@ -30,10 +30,7 @@ function getSpotPrice(
   if (!spotMeta || !allMids) return null;
 
   const tokenInfo = spotMeta.tokens.find((t: any) => t.name === coin);
-  if (!tokenInfo) {
-    console.log(`[getSpotPrice] ${coin}: tokenInfo not found`);
-    return null;
-  }
+  if (!tokenInfo) return null;
 
   // USDC = token 0, USDH = token 360 (treat as equivalent)
   const STABLE_QUOTE_TOKENS = [0, 360];
@@ -42,18 +39,9 @@ function getSpotPrice(
       u.tokens[0] === tokenInfo.index &&
       STABLE_QUOTE_TOKENS.includes(u.tokens[1]),
   );
-  if (!spotPair) {
-    console.log(
-      `[getSpotPrice] ${coin}: no spotPair for tokenIndex=${tokenInfo.index}`,
-    );
-    return null;
-  }
+  if (!spotPair) return null;
 
   const price = parseFloat(allMids[`@${spotPair.index}`] || "0");
-  if (price <= 0)
-    console.log(
-      `[getSpotPrice] ${coin}: price=0 for @${spotPair.index}, raw=${allMids[`@${spotPair.index}`]}`,
-    );
   return price > 0 ? price : null;
 }
 
@@ -145,17 +133,13 @@ function PortfolioSkeleton() {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {[...Array(3)].map((_, i) => (
         <Card key={i}>
-          <CardContent className="p-4 space-y-3">
-            <div className="flex justify-between">
-              <Skeleton className="h-5 w-16" />
-              <Skeleton className="h-5 w-14" />
-            </div>
-            <Skeleton className="h-8 w-28" />
-            <div className="grid grid-cols-2 gap-2">
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-5 w-16" />
+                <Skeleton className="h-5 w-14" />
+              </div>
+              <Skeleton className="h-5 w-20" />
             </div>
           </CardContent>
         </Card>
