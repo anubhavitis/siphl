@@ -210,13 +210,14 @@ export function Portfolio({ address }: PortfolioProps) {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <Header title="Portfolio" description="Your spot balances and SIPs" />
+        <Header title="Portfolio" description="Your spot balances and SIPs" />
+        <div className="flex items-center gap-3">
           {!isLoading && items.length > 0 && (
             <Dialog>
               <DialogTrigger asChild>
-                <button className="p-1.5 rounded-md hover:bg-accent transition-colors">
+                <button className="inline-flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm hover:bg-accent transition-colors">
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">Stats</span>
                 </button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[340px]">
@@ -273,8 +274,6 @@ export function Portfolio({ address }: PortfolioProps) {
               </DialogContent>
             </Dialog>
           )}
-        </div>
-        <div className="flex items-center gap-3">
           <UnifiedDepositModal
             trigger={
               <button className="inline-flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm hover:bg-accent transition-colors">

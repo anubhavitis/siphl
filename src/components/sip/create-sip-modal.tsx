@@ -26,7 +26,11 @@ import {
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSpotMetadata, useAllMids, useInitializeAgent } from "@/lib/hyperliquid/hooks";
+import {
+  useSpotMetadata,
+  useAllMids,
+  useInitializeAgent,
+} from "@/lib/hyperliquid/hooks";
 import { useUserSIPs } from "@/lib/hyperliquid/hooks-sip";
 import { Loader2, Plus } from "lucide-react";
 import { useSignMessage, useAccount } from "wagmi";
@@ -84,7 +88,7 @@ export function CreateSipModal() {
 
     // Find the selected asset to get its index
     const selectedAssetData = assetsWithPrices.find(
-      (asset) => asset?.name === selectedAsset
+      (asset) => asset?.name === selectedAsset,
     );
 
     if (!selectedAssetData) {
@@ -132,7 +136,7 @@ export function CreateSipModal() {
 
   // Get assets that already have active/paused SIPs
   const existingAssetNames = new Set(
-    existingSIPs?.map((sip: any) => sip.asset_name) || []
+    existingSIPs?.map((sip: any) => sip.asset_name) || [],
   );
 
   // Get sorted assets with prices
@@ -181,7 +185,7 @@ export function CreateSipModal() {
                   disabled={!canCreateSIP}
                 >
                   <Plus className="w-4 h-4" />
-                  Start new SIP
+                  SIP
                 </Button>
               </DialogTrigger>
             </span>
