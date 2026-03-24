@@ -18,7 +18,14 @@ import { UnifiedDepositModal } from "./unified-deposit-modal";
 import { CreateSipModal } from "@/components/sip/create-sip-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
-import { Wallet } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Wallet, BarChart3 } from "lucide-react";
 import { PortfolioCard, PortfolioItem } from "./portfolio-card";
 
 function getSpotPrice(
@@ -130,7 +137,7 @@ function buildPortfolioItems(
 
 function PortfolioSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="flex flex-col gap-3">
       {[...Array(3)].map((_, i) => (
         <Card key={i}>
           <CardContent className="p-4">
@@ -185,23 +192,86 @@ export function Portfolio({ address }: PortfolioProps) {
   const usdcItem = items.find((i) => i.isUsdc);
   const assetItems = items.filter((i) => !i.isUsdc);
 
-  const totalValue = useMemo(
-    () => items.reduce((sum, item) => sum + (item.currentValue ?? 0), 0),
-    [items],
-  );
+  const totals = useMemo(() => {
+    const nonUsdc = items.filter((i) => !i.isUsdc);
+    const totalValue = items.reduce(
+      (sum, item) => sum + (item.currentValue ?? 0),
+      0,
+    );
+    const totalInvested = nonUsdc.reduce(
+      (sum, item) => sum + (item.entryNtl ?? 0),
+      0,
+    );
+    const pnl = totalValue - totalInvested - (usdcItem?.currentValue ?? 0);
+    const pnlPercent = totalInvested > 0 ? (pnl / totalInvested) * 100 : 0;
+    return { totalValue, totalInvested, pnl, pnlPercent };
+  }, [items, usdcItem]);
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div>
+        <div className="flex items-center gap-2">
           <Header title="Portfolio" description="Your spot balances and SIPs" />
           {!isLoading && items.length > 0 && (
-            <p className="text-lg font-mono font-semibold">
-              {`$${totalValue.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}`}
-            </p>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="p-1.5 rounded-md hover:bg-accent transition-colors">
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[340px]">
+                <DialogHeader>
+                  <DialogTitle>Portfolio Summary</DialogTitle>
+                </DialogHeader>
+                <div className="grid grid-cols-2 gap-4 py-4">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-muted-foreground">
+                      Total Value
+                    </span>
+                    <span className="text-sm font-mono font-semibold">
+                      $
+                      {totals.totalValue.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs text-muted-foreground">
+                      Total Invested
+                    </span>
+                    <span className="text-sm font-mono font-semibold">
+                      $
+                      {totals.totalInvested.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs text-muted-foreground">P&L</span>
+                    <span
+                      className={`text-sm font-mono font-semibold ${totals.pnl >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+                    >
+                      {totals.pnl >= 0 ? "+" : ""}$
+                      {Math.abs(totals.pnl).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs text-muted-foreground">P&L %</span>
+                    <span
+                      className={`text-sm font-mono font-semibold ${totals.pnlPercent >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+                    >
+                      {totals.pnlPercent >= 0 ? "+" : ""}
+                      {totals.pnlPercent.toFixed(2)}%
+                    </span>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           )}
         </div>
         <div className="flex items-center gap-3">
@@ -235,7 +305,7 @@ export function Portfolio({ address }: PortfolioProps) {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex flex-col gap-3">
           {assetItems.map((item) => (
             <PortfolioCard
               key={item.coin}

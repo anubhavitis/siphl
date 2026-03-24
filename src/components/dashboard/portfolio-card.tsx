@@ -153,27 +153,21 @@ export function PortfolioCard({
     <Card>
       <Accordion type="single" collapsible>
         <AccordionItem value={coin} className="border-b-0">
-          <CardContent className="p-4 pb-0">
-            <AccordionTrigger className="py-0 hover:no-underline">
-              <div className="flex items-center justify-between w-full pr-2">
-                <div className="flex items-center gap-3">
-                  <TradeLink coin={coin}>
-                    <span className="font-medium">{coin}</span>
-                  </TradeLink>
-                  {pnlPercent !== null && <PnlBadge pnl={pnlPercent} />}
-                </div>
-                <span className="text-sm font-mono text-muted-foreground">
-                  {avgBuyPrice !== null ? formatUsd(avgBuyPrice, 6) : "--"}
-                </span>
-              </div>
-            </AccordionTrigger>
-          </CardContent>
+          <AccordionTrigger className="px-4 py-3 hover:no-underline gap-2">
+            <div className="flex items-center gap-3 min-w-0">
+              <TradeLink coin={coin}>
+                <span className="font-medium">{coin}</span>
+              </TradeLink>
+              {pnlPercent !== null && <PnlBadge pnl={pnlPercent} />}
+            </div>
+            <span className="text-sm font-mono text-muted-foreground whitespace-nowrap ml-auto mr-2">
+              avg {avgBuyPrice !== null ? formatUsd(avgBuyPrice, 6) : "--"}
+            </span>
+          </AccordionTrigger>
 
-          <AccordionContent>
-            <div className="px-4 pb-4 space-y-3">
-              <div
-                className={`text-2xl font-mono font-semibold ${valueColor}`}
-              >
+          <AccordionContent className="px-4 pb-4">
+            <div className="space-y-3">
+              <div className={`text-2xl font-mono font-semibold ${valueColor}`}>
                 {currentValue !== null ? formatUsd(currentValue) : "--"}
               </div>
 
