@@ -169,6 +169,12 @@ export function PortfolioCard({
             <div className="space-y-3">
               <div className={`text-2xl font-mono font-semibold ${valueColor}`}>
                 {currentValue !== null ? formatUsd(currentValue) : "--"}
+                {currentValue !== null && entryNtl !== null && entryNtl > 0 && (
+                  <span className="text-sm ml-2">
+                    ({currentValue - entryNtl >= 0 ? "+" : "-"}
+                    {formatUsd(Math.abs(currentValue - entryNtl))})
+                  </span>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-2">
