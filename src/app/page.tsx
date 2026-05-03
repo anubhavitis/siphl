@@ -34,10 +34,18 @@ export default function Home() {
             height={100}
           />
           <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight">
-            siphl
+            siphl.xyz
           </h1>
           <p className="text-muted-foreground text-sm">
-            Automated Hyperliquid trading
+            Automated SPOT SIPs on{" "}
+            <a
+              href="https://app.hyperliquid.xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-foreground transition-colors"
+            >
+              HL
+            </a>
           </p>
         </div>
 
