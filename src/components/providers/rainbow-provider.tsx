@@ -44,7 +44,7 @@ export default function RainbowProvider({
 //     },
 //   ],
 //   {
-//     appName: "EZDAWG - Hyperliquid SIP Platform",
+//     appName: "SIPHL - Hyperliquid SIP Platform",
 //     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "blah blah",
 //   }
 // );

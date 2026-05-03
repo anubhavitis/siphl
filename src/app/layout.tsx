@@ -37,7 +37,7 @@ export default function RootLayout({
           href="/apple-touch-icon.png"
         />
         <link rel="shortcut icon" href="/favicon.ico" />
-        <title>EzDawg - Hyperliquid SIP Platform</title>
+        <title>Siphl - Hyperliquid SIP Platform</title>
       </head>
       <body
         className={`${inter.className} antialiased relative min-h-screen min-w-screen`}

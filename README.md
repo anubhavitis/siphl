@@ -1,4 +1,4 @@
-# EZDAWG - Hyperliquid SIP Platform
+# SIPHL - Hyperliquid SIP Platform
 
 Smart investment portal for creating Systematic Investment Plans (SIPs) on Hyperliquid spot assets.
 

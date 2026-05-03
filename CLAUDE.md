@@ -12,7 +12,7 @@ bun run lint     # Run linting
 
 ## Architecture
 
-**EzDawg** is a Hyperliquid Systematic Investment Plan (SIP) platform built with Next.js 16 + React 19.
+**Siphl** is a Hyperliquid Systematic Investment Plan (SIP) platform built with Next.js 16 + React 19.
 
 ### Core Flow
 1. User connects wallet (Rainbow Kit on Arbitrum)

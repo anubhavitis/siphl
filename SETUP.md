@@ -1,4 +1,4 @@
-# EZDAWG Setup Guide
+# SIPHL Setup Guide
 
 ## ✅ What's Been Built
 

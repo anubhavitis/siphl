@@ -29,12 +29,12 @@ export default function Home() {
           <Image
             className="mx-auto"
             src="/logo.png"
-            alt="ezdawg"
+            alt="siphl"
             width={100}
             height={100}
           />
           <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight">
-            ezdawg
+            siphl
           </h1>
           <p className="text-muted-foreground text-sm">
             Automated Hyperliquid trading

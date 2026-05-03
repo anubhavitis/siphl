@@ -68,7 +68,7 @@ export function useApproveAgentMutation() {
   const queryClient = useQueryClient();
   const infoClient = useHyperliquidStore((state) => state.infoClient);
   const initExchangeClient = useHyperliquidStore(
-    (state) => state.initExchangeClient
+    (state) => state.initExchangeClient,
   );
   const exchangeClient = useHyperliquidStore((state) => state.exchangeClient);
 
@@ -175,7 +175,7 @@ export function useApproveAgent() {
       }
       return await exchangeClient.approveAgent({
         agentAddress,
-        agentName: "EzDawg Investment Agent",
+        agentName: "Siphl Investment Agent",
       });
     },
     onSuccess: () => {
@@ -251,7 +251,7 @@ export function useSpotAssetByName(assetName: string | undefined) {
       if (!spotMeta || !assetName) return null;
       return (
         spotMeta.universe.find(
-          (u: any) => u.name.toUpperCase() === assetName.toUpperCase()
+          (u: any) => u.name.toUpperCase() === assetName.toUpperCase(),
         ) || null
       );
     },

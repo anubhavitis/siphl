@@ -84,7 +84,7 @@ export async function getOrCreateAgent(userAddress: Address): Promise<{
 export async function checkAgentApproval(
   infoClient: hl.InfoClient | null,
   userAddress: Address,
-  agentAddress: Address
+  agentAddress: Address,
 ): Promise<boolean> {
   if (!infoClient) {
     return false;
@@ -96,7 +96,7 @@ export async function checkAgentApproval(
       "🚀 ~ checkAgentApproval ~ resp:",
       resp,
       "agentAddress",
-      agentAddress
+      agentAddress,
     );
 
     if (!resp) {
@@ -125,7 +125,7 @@ export async function checkAgentApproval(
 export async function approveAgentIfNeeded(
   exchangeClient: hl.ExchangeClient | null,
   agentAddress: Address,
-  isApproved: boolean
+  isApproved: boolean,
 ): Promise<void> {
   if (isApproved) {
     console.log("Agent already approved, skipping approval step");
@@ -140,14 +140,14 @@ export async function approveAgentIfNeeded(
     const environment = process.env.NEXT_PUBLIC_ENVIRONMENT || "development";
     await exchangeClient.approveAgent({
       agentAddress,
-      agentName: environment === "local" ? "EzDawg L Agent" : "EzDawg Agent",
+      agentName: environment === "local" ? "Siphl L Agent" : "Siphl Agent",
     });
     console.log("Agent approved successfully");
   } catch (error: any) {
     // If approval fails, log but don't throw - agent might already be approved
     console.warn(
       "Agent approval failed (might already be approved):",
-      error?.message || error
+      error?.message || error,
     );
   }
 }
@@ -162,7 +162,7 @@ export async function approveAgentIfNeeded(
 export async function approveBuilderFee(
   exchangeClient: hl.ExchangeClient | null,
   builderAddress: Address,
-  maxFeeRate: string
+  maxFeeRate: string,
 ): Promise<void> {
   if (!exchangeClient) {
     throw new Error("Exchange client not initialized");
@@ -194,7 +194,7 @@ export async function approveBuilderFee(
  */
 export async function fetchAgentInfo(
   userAddress: Address,
-  infoClient: hl.InfoClient | null
+  infoClient: hl.InfoClient | null,
 ): Promise<{ agentAddress: Address; isApproved: boolean }> {
   // Step 1: Get or create agent via API (returns only address, never private key)
   const { agentAddress, approved } = await getOrCreateAgent(userAddress);
@@ -205,7 +205,7 @@ export async function fetchAgentInfo(
   const isApproved = await checkAgentApproval(
     infoClient,
     userAddress,
-    agentAddress
+    agentAddress,
   );
 
   console.log("isApproved (chain)", isApproved);
@@ -227,7 +227,7 @@ export async function approveAgent(
   exchangeClient: hl.ExchangeClient,
   infoClient: hl.InfoClient | null,
   userAddress: Address,
-  agentAddress: Address
+  agentAddress: Address,
 ): Promise<boolean> {
   // Approve agent on Hyperliquid (this triggers a signature request)
   console.log("Approving agent");
@@ -238,7 +238,7 @@ export async function approveAgent(
   const isApproved = await checkAgentApproval(
     infoClient,
     userAddress,
-    agentAddress
+    agentAddress,
   );
   console.log("isApproved", isApproved);
 
@@ -259,14 +259,14 @@ export async function approveAgent(
  * Main orchestrator function that initializes an agent
  */
 export async function initializeAgent(
-  params: InitializeAgentParams
+  params: InitializeAgentParams,
 ): Promise<AgentInitResult> {
   const { userAddress, infoClient } = params;
 
   // Only fetch agent info - don't auto-approve
   const { agentAddress, isApproved } = await fetchAgentInfo(
     userAddress,
-    infoClient
+    infoClient,
   );
 
   return {
